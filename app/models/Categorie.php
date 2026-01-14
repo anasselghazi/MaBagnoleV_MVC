@@ -15,12 +15,18 @@ public function getId(): int {return $this->id ;}
 public function getNom(): string {return $this->nom ;}
 public function getVehicules(): array {return $this->vehicules;}
 
-public function loadVehicules(): void {
-        $stmt = $this->db->prepare("SELECT * FROM vehicules WHERE categorie_id = :id");
+ 
+ public function loadVehicules(): void {
+        $sql = "SELECT v.* FROM vehicules v 
+                INNER JOIN categories c ON v.categorie_id = c.id 
+                WHERE c.id = :id";
+        
+        $stmt = $this->db->prepare($sql);
         $stmt->execute(['id' => $this->id]);
         $this->vehicules = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+     
 
 public function save(): bool {
         if ($this->id > 0) {
@@ -38,7 +44,7 @@ public function save(): bool {
         }
     }
 
-    
+
 public static function find(PDO $pdo, int $id) {
         $stmt = $pdo->prepare("SELECT * FROM categories WHERE id = :id");
         $stmt->execute(['id' => $id]);
