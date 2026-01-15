@@ -1,23 +1,27 @@
- <?php
-// index.php
+  <?php
+  spl_autoload_register(...);
+  $pdo = Database::getInstance();
+  $request = $_SERVER['REQUEST_URI'];
+  $path = parse_url($request,PHP_URL_PATH);
+  $path = trim($path,'/');
 
-spl_autoload_register(function ($class) {
-     $sources = [
-        'app/models/',
-        'config/'
-    ];
-
-    foreach ($sources as $source) {
-        $file = $source . $class . '.php';
-        if (file_exists($file)) {
-            include $file;
-            return;     
-        }
-    }
-});
-
- $pdo = Database::getInstance();
-$catManager = new CategoryManager($pdo);
-$categories = $catManager->getAllWithVehicules();
-
-var_dump($categories);
+  switch(true){
+    case $path ==='categories':
+        $controller = new CategoriesController($pdo);
+        $controller->listAction();
+        break;
+    case preg_match('#^vehicules/(\d+)$#',$path,$matches):
+        $controller = new VehiculesController($pdo);
+        $controller->showAction((int)$matches[1]) ;
+        break;   
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  ?>
