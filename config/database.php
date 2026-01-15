@@ -5,7 +5,7 @@ class Database {
 
     public static function getInstance():PDO{
         if(!self::$instance){
-            $dsn="mysql :host=loclahost;dbname=mabagnole";
+            $dsn="mysql:host=localhost;dbname=mabagnole";
             self::$instance = new PDO($dsn , 'root','',[
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
             ]);
